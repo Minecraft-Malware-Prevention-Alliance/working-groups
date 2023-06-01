@@ -23,27 +23,32 @@ This document proposes locking dangerous packages and classes, and allowing the 
 
 ## Proposal
 While signing is useful for checking mods weren't modified or infected,
-it has lots more potential—we can send much more than simply, "hey, this is the mod!". We can tell the CA more: that this mod wants to use unsafe code, or natives, or Mixins...
+it has lots more potential—we can send much more than simply, "hey, this is the mod!".
+We can tell the CA more, for example, that this mod wants to use unsafe code, or natives, or Mixins...
 
 We propose to add a permissions API that allows mods to use forbidden packages and classes.
 
-This proposal improves the security of using things such as classloading, reflection, unsafe blocks, native code, etc., but doesn't prevent us from using them completely.
+This proposal improves the security of using things such as classloading, reflection, unsafe blocks, native code, etc.,
+but doesn't prevent us from using them completely.
 
 In the case of failed communication with the CA, we propose to show a big red scary warning pop up,
 with the classic "Here be dragons!" warning and "I know what I'm doing!" button, and give mods the permission they require to work.
 
 ### How will that work?
 
-When sending the mod's certificate to the CA to approve, we'll append a list of permissions the mod needs to use. The CA will read the mod data and the permissions, and tell us if the mod is secure. If it is, we'll load it.
+When sending the mod's certificate to the CA to approve, we'll append a list of permissions the mod needs to use.
+The CA will read the mod data and the permissions, and tell us if the mod is secure.
+If it is, we'll load it.
 
 #### Tech Talk
 
-There are three ways to implement the check for forbidden code. We propose to require a modloader to implement at least two of them.
+There are three ways to implement the check for forbidden code.
+We propose to require a mod-loader to implement at least two of them.
 1. **Java Agent** - requires an argument to the `java` command.
 2. **Custom Classloader** - implementing `ClassLoader` and delegating to the original one after some checks. There are two variations of this method:
-  - **Plural Classloader** - creating a new classloader per mod.
-  - **Singular Classloader** - creating a single custom classloader, that'll use the stack trace to see what mod has invoked what. Will require additional security measures, such as using Java 9's modules.
-3. **ASM Scan** - inspecting the jar with ASM before even loading it. This is the slowest method of all, although debatably the safest. 
+   - **Plural Classloader** - creating a new classloader per mod.
+   - **Singular Classloader** - creating a single custom classloader, that'll use the stack trace to see what mod has invoked what. Will require additional security measures, such as using Java 9's modules.
+3. **ASM Scan** - inspecting the jar with ASM before even loading it. This is the slowest method of all, although debatable-y the safest. 
 
 ### But won't someone Mixin into another mod, stealing their permissions?
 
@@ -51,7 +56,7 @@ We propose creating *two* Mixin permissions:
 1. `mixin` - allows to Mixin Minecraft classes.
 2. `mixin-elevated` - allows to Mixin other mods.
 
-This will improve the security of Mixins - although we check for forbidden code in the mixin package, too.
+This will improve the security of Mixins—although we check for forbidden code in the mixin package, too.
 
 ### Examples of dangerous packages
  *[Source](https://docs.google.com/document/d/1EpynBXdKLD69F0F0nk-Sph3FXd18IMs8PhXENB7dl6g/edit#heading=h.b4y2p3mjmgab); Credit to the [MoCKoGE](https://GitHub.com/LaylaMeower/MoCKoGE) community, especially [NerjalNosk](https://github.com/NerjalNosk)*
