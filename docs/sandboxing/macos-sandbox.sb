@@ -1,0 +1,55 @@
+(version 1)
+(deny default)
+(allow process-exec)
+(allow process-fork)
+(allow sysctl-read)
+(allow file-read-metadata)
+(allow network*)
+(allow mach*)
+(allow iokit*)
+(allow lsopen)
+(import "/System/Library/Sandbox/Profiles/bsd.sb")
+
+
+; Allow read and write access to Minecraft application files
+(allow file-read* file-write*
+  (subpath "/Applications/Minecraft.app/")
+  (subpath "/Applications/Minecraft.app/Contents/MacOS/launcher")
+  (regex "/Library/Keychains/*")
+  (subpath "/Library/Application Support/minecraft/launcher/launcher.bundle/Contents/Frameworks/launcher-Helper.app")
+)
+
+(allow mach-lookup (global-name "com.apple.biome.compute.source.user"))
+
+; Read-write access to Minecraft Game files
+(allow file-read* file-write*
+  (regex "/Library/Application Support/minecraft/*")
+)
+
+; Allow access to minecraft's sandboxed data
+(allow file-read* file-write*
+  (subpath "/Library/Saved Application State/com.mojang.minecraftlauncher.savedState/")
+)
+
+; Allow read and write access to temporary system files
+(allow file-read* file-write*
+  (subpath "/private/var/")
+  (subpath "/private/tmp/"))
+
+; Allow access to Rosetta runtime
+(allow file-read*
+  (subpath "/Library/Apple/usr/libexec/oah/libRosettaRuntime")
+)
+
+; Allow access to specific system frameworks and libraries
+(allow file-read*
+  (subpath "/System/Library/Frameworks/OpenGL.framework")
+  (subpath "/System/Library/Frameworks/CoreAudio.framework")
+  (subpath "/System/Library/Frameworks/CoreMedia.framework")
+  (subpath "/System/Library/PrivateFrameworks/GameKitServices.framework")
+)
+
+; Allow access to other random stuff it needs
+(allow file-read* 
+  (subpath "/Library/Preferences/com.apple.ViewBridge.plist")
+)
