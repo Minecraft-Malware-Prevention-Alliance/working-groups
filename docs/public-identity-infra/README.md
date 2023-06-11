@@ -18,7 +18,4 @@ the root key which if compromised, can cause a massive disaster.
 
 ## Trust Roots
 
-Orginizations who have been decided to be a trust root should always be independent and if possible we should have atleast 4 trust roots.
-This is to avoid a monopoly on who can issue keys. 
-
 Its important for the trust roots to have a history of good security, and properly responding to security reports on-time.
