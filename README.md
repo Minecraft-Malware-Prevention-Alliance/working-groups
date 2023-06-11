@@ -8,7 +8,7 @@ Where we discuss specific ideas for specific working groups.
 Current working groups
 
 - [Sandboxing](docs/sandboxing/README.md)
-- [Public Identitfy Infrastructure](docs/public-identitfy-infra/README.md)
+- [Public Identitfy Infrastructure](docs/public-identity-infra/README.md)
 - [Reproducible Builds](docs/reproducible-builds/README.md)
 - [Default Templates](docs/default-templates/README.md)
 - [Runtime Downloading](docs/runtime-downloading/README.md)
