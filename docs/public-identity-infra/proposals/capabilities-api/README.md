@@ -67,6 +67,20 @@ This will improve the security of Mixins—although we check for forbidden code 
 
 Yes, unfortunately.
 
+### Wait, but what about the file system?
+
+We propose to create a _cross-mod-loader_ API
+(as in, the same signature in all mod-loaders; not necessarily the same implementation)
+to allow mods to read and write files from the `.minecraft/config` directory,
+and the `~/.minecraft/config/global` directory.
+
+#### Tech Talk
+
+This could be done by using the `okio` library,
+blocking the `okio.FileSystem.SYSTEM`, `okio.FileSystem.Companion.SYSTEM`
+and `okio.FileSystem.Companion.getSYSTEM()` code elements,
+and creating custom file systems that mods will be able to use (`GlobalConfigFileSystem` and `LocalConfigFileSystem`).
+
 ### Examples of dangerous packages
 *[Source](https://docs.google.com/document/d/1EpynBXdKLD69F0F0nk-Sph3FXd18IMs8PhXENB7dl6g/edit#heading=h.b4y2p3mjmgab); Credit to the [MoCKoGE](https://GitHub.com/LaylaMeower/MoCKoGE) community, especially [NerjalNosk](https://github.com/NerjalNosk)*
 * `java.io` - Direct access to the file system is dangerous.
