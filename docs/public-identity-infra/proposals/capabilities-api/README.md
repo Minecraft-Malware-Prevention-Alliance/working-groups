@@ -1,6 +1,9 @@
-> ***Note:** this is a draft.*
-# Permissions API
-This document proposes locking dangerous packages and classes, and allowing the trust root to give mods permissions to access locked classes.
+> ***Note:** this is a draft. **Constructive** criticism will be welcomed.*
+# Capabilities API
+This document proposes locking dangerous packages and classes,
+and allowing CAs to give mods capablities to access forbidden classes.
+
+Formerly known as the Permissions API. 
 
 ### Proposal Contributors
 - [Laxla](https://github.com/LaylaMeower)
@@ -19,26 +22,26 @@ This document proposes locking dangerous packages and classes, and allowing the 
 - Allowing CAs to monopolize mod features
 - Defining what will happen to a CA when breaking the trust laws, nor defining said trust laws
 - Deciding *how* jars will be signed
-- Defining the process that CAs should go through before allowing permissions (that is their own thing to figure out)
+- Defining the process that CAs should go through before giving capabilities (that is their own thing to figure out)
 
 ## Proposal
 While signing is useful for checking mods weren't modified or infected,
 it has lots more potential—we can send much more than simply, "hey, this is the mod!".
 We can tell the CA more, for example, that this mod wants to use unsafe code, or natives, or Mixins...
 
-We propose to add a permissions API that allows mods to use forbidden packages and classes.
+We propose to add a capabilities API that allows mods to use forbidden packages and classes, under approval from the CA.
 
 This proposal improves the security of using things such as classloading, reflection, unsafe blocks, native code, etc.,
 but doesn't prevent us from using them completely.
 
 In the case of failed communication with the CA, we propose to show a big red scary warning pop up,
-with the classic "Here be dragons!" warning and "I know what I'm doing!" button, and give mods the permission they require to work.
+with the classic "Here be dragons!" warning and "I know what I'm doing!" button,
+and give mods the capabilities they need to work.
 
 ### How will that work?
 
-When sending the mod's certificate to the CA to approve, we'll append a list of permissions the mod needs to use.
-The CA will read the mod data and the permissions, and tell us if the mod is secure.
-If it is, we'll load it.
+When sending the mod's certificate to the CA to approve, we'll append a list of capabilities the mod needs.
+The CA will take these capabilities into account, and may reject the certificate we've sent.
 
 #### Tech Talk
 
@@ -50,22 +53,29 @@ We propose to require a mod-loader to implement at least two of them.
    - **Singular Classloader** - creating a single custom classloader, that'll use the stack trace to see what mod has invoked what. Will require additional security measures, such as using Java 9's modules.
 3. **ASM Scan** - inspecting the jar with ASM before even loading it. This is the slowest method of all, although debatable-y the safest. 
 
-### But won't someone Mixin into another mod, stealing their permissions?
+### But won't someone Mixin into another mod, "stealing" their capabilities?
 
-We propose creating *two* Mixin permissions:
-1. `mixin` - allows to Mixin Minecraft classes.
-2. `mixin-elevated` - allows to Mixin other mods.
+We're proposing two solutions:
+1. Creating *two* Mixin capabilities (note that mixing somewhere still requires the capability to use the target class): 
+   1. `mixin` - allows to Mixin Minecraft classes.
+   2. `mixin-elevated` - allows to Mixin other mods.
+2. Creating a _dynamic_ mixin capability, `mixin-$package` - listing all mixin targets to the CA.
 
 This will improve the security of Mixins—although we check for forbidden code in the mixin package, too.
 
+### But won't that delay mod reviews by a lot?
+
+Yes, unfortunately.
+
 ### Examples of dangerous packages
- *[Source](https://docs.google.com/document/d/1EpynBXdKLD69F0F0nk-Sph3FXd18IMs8PhXENB7dl6g/edit#heading=h.b4y2p3mjmgab); Credit to the [MoCKoGE](https://GitHub.com/LaylaMeower/MoCKoGE) community, especially [NerjalNosk](https://github.com/NerjalNosk)*
+*[Source](https://docs.google.com/document/d/1EpynBXdKLD69F0F0nk-Sph3FXd18IMs8PhXENB7dl6g/edit#heading=h.b4y2p3mjmgab); Credit to the [MoCKoGE](https://GitHub.com/LaylaMeower/MoCKoGE) community, especially [NerjalNosk](https://github.com/NerjalNosk)*
 * `java.io` - Direct access to the file system is dangerous.
 * `java.nio` - same as above.
 * `sun.nio` - Another file I/O alternative
 * `java.lang.ClassLoader` - Allows restriction bypass
 * `jdk.internal` - Provides access to the JVM internal aspects (e.g., a variation of ASM)
 * `sun.misc.Unsafe` - Allows bypassing the restrictions set here.
+* `java.lang.ProcessBuilder` - allows running arbitrary code
 * `java.reflect` - allows to modify code.
 * `java.lang.reflect` - core part of the above package.
 * `java.lang.Package` - ensues reflection exposition.
@@ -89,9 +99,11 @@ This will improve the security of Mixins—although we check for forbidden code 
 * `org.objectweb.asm` - ASM can be used to modify bytecode on runtime. Yes, it's another reflection alternative. And it's VERY powerful.
 * `org.spongepowered.asm` - Yes indeed, we're suggesting to restrict the mixin library. It can be used to modify other mod's behaviors.
 
+Note this list is a WIP, and contributions will be welcome.
+
 ## Alternatives
 - _Simply have "loader plugins" that execute without blocking access to special classes._
   Popular mods such as sodium use lots of unsafe code,
-  ![Discord message from IMS](soidum_unsafe.png)
+  ![IMS, Admin: sodium already needs unsafe for like 50% of the codebase](sodium_unsafe.png "Discord message from IMS")
   and a big warning window every time you open Minecraft with sodium can be very irritating.
 - *Don't block dangerous code at all.* But we're talking security, and that's unsecure.
