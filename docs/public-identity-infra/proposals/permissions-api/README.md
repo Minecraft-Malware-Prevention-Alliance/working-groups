@@ -29,7 +29,7 @@ We propose to add a permissions API that allows mods to use forbidden packages a
 
 This proposal improves the security of using things such as classloading, reflection, unsafe blocks, native code, etc., but doesn't prevent us from using them completely.
 
-In the case of failed communication with the trust authority, we propose to show a big red scary warning pop up,
+In the case of failed communication with the CA, we propose to show a big red scary warning pop up,
 with the classic "Here be dragons!" warning and "I know what I'm doing!" button, and give mods the permission they require to work.
 
 ### How will that work?
