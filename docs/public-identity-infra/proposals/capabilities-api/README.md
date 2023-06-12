@@ -1,7 +1,7 @@
 > ***Note:** this is a draft. **Constructive** criticism will be welcomed.*
 # Capabilities API
 This document proposes locking dangerous packages and classes,
-and allowing CAs to give mods capablities to access forbidden classes.
+and allowing CAs to give mods capabilities to access forbidden classes.
 
 Formerly known as the Permissions API. 
 
@@ -12,7 +12,7 @@ Formerly known as the Permissions API.
 - [This discussion](https://discord.com/channels/1115852272245686334/1117392205787693107/1117454247529812115) in the MMPA discord, in `#wg-public`
 
 ### Definitions
-- **CA** - Certificate Authority
+- **CA** - Certificate/Capability Authority, see [the working group](../../README.md).
 
 ## Goals
 - Preventing mods from accessing dangerous packages
