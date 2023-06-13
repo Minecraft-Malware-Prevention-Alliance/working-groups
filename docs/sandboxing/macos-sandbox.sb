@@ -16,10 +16,25 @@
   (subpath "/Applications/Minecraft.app/")
   (subpath "/Applications/Minecraft.app/Contents/MacOS/launcher")
   (regex "/Library/Keychains/*")
-  (subpath "/Library/Application Support/minecraft/launcher/launcher.bundle/Contents/Frameworks/launcher-Helper.app")
+  (regex "^$HOME/Library/Saved Application State/net\.java\w*")
+  (subpath "$HOME/Library/Application Support/CEF/User Data/WidevineCdm/")
+  (subpath "$HOME/Library/Fonts/")
+  (subpath "/private/var/folders/")
 )
 
-(allow mach-lookup (global-name "com.apple.biome.compute.source.user"))
+(allow file-issue-extension 
+  (extension-class "com.apple.app-sandbox.read") 
+  (literal "$HOME/Library/Application Support/minecraft/launcher/launcher.bundle/Contents/Frameworks/launcher-Helper.app")
+  )
+
+(allow file-read-data
+  (subpath "/private/etc/hosts")
+  (subpath "$HOME/Library/Application Support/minecraft")
+)
+
+(allow mach-lookup 
+    (global-name "com.apple.biome.compute.source.user")
+)
 
 ; Read-write access to Minecraft Game files
 (allow file-read* file-write*
@@ -27,14 +42,65 @@
 )
 
 ; Allow access to minecraft's sandboxed data
-(allow file-read* file-write*
-  (subpath "/Library/Saved Application State/com.mojang.minecraftlauncher.savedState/")
+(allow file-read-data
+  (subpath "/Library/Preferences/com.apple.security.plist")
+  (subpath "/Library/Saved Application State/com.mojang.minecraftlauncher.savedState")
+  (subpath "/Library/Application Support/CrashReporter/DiagnosticMessagesHistory.plist")
 )
 
-; Allow read and write access to temporary system files
+; Allow access to user inpt data
+(allow file-read-data
+  (subpath "$HOME/Library/Spelling")
+  (subpath "$HOME/Library/Input Methods")
+  (subpath "$HOME/Library/Keyboard Layouts")
+)
+
+(allow user-preference-read 
+  (preference-domain "com.apple.speech.recognition.AppleSpeechRecognition.prefs")
+  (preference-domain "com.apple.HIToolbox")
+  (preference-domain "com.apple.CoreGraphics")
+  (preference-domain "com.apple.universalaccess")
+  (preference-domain "com.apple.security")
+  (preference-domain "pbs")
+)
+
+; Allow read and write access to neccesary system files
 (allow file-read* file-write*
-  (subpath "/private/var/")
-  (subpath "/private/tmp/"))
+  (regex "/Library/Saved Application State/com.mojang.minecraftlauncher.savedState/*")
+  (subpath "/private/var/db/mds/")
+
+)         
+
+  ; All this was used in a prior version, will be removed if no need is found
+  ; (regex "^/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/C/net\.java\w*")
+  ; (regex "^/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/C/net\.mojang\w*")
+  ; (regex "^/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/T/image\w*")
+  ; (regex "^/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/T/hsperfdata_\w*")
+
+  ; (regex "^/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/T/.com.mojang.mclauncher.helper.*")
+  ; (regex "/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/C/com.mojang.mclauncher.helper.gpu/*")
+  ; (regex "^/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/C/com.mojang.minecraftlauncher/.*")
+  ; (regex "^/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/C/com.mojang.minecraftlauncherupdater/.*")
+  ; (subpath "/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/C/mds/mds.lock")
+
+(allow mach-lookup (global-name "com.apple.tccd.systempolicy.appbundles"))
+
+
+(allow file-read-data 
+  (subpath "/Library/Application Support/CrashReporter/DiagnosticMessagesHistory.plist")
+
+
+
+
+  (subpath "/private/var/db/searchparty/sharedVault/agents/78BFBE72-7C54-4571-8D1B-5F58D809AA3B/savedConfiguration.plist")
+  (subpath "/Library/Preferences/com.apple.networkd.plist")
+  (subpath "/private/var/db/searchparty/sharedVault/BeaconPayloadCache/")
+  (subpath "$HOME/Library/Preferences/com.apple.security.plist")
+)
+
+(allow file-read-data file-write-unlink
+  (subpath "$HOME/Library/Application Support/CEF/User Data/WidevineCdm/")
+)           
 
 ; Allow access to Rosetta runtime
 (allow file-read*
@@ -53,3 +119,17 @@
 (allow file-read* 
   (subpath "/Library/Preferences/com.apple.ViewBridge.plist")
 )
+
+(allow user-preference-write
+  (preference-domain "com.mojang.mclauncher")
+  (preference-domain "com.mojang.mclauncher.helper.renderer")
+  (preference-domain "com.mojang.minecraftlauncher")
+)
+
+(allow user-preference-read
+  (preference-domain "com.mojang.mclauncher.helper.renderer")
+  (preference-domain "com.mojang.minecraftlauncher")
+  (preference-domain "com.mojang.mclauncher")
+  (preference-domain "kCFPreferencesAnyApplication")
+)
+
