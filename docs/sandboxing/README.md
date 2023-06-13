@@ -8,11 +8,15 @@ Sandboxing is a concept where we try to sandbox mods from the users host system 
 
 There is no clear solution to this yet, but it should take heavy inspiration from [The Chromium Windows Sandbox](https://chromium.googlesource.com/chromium/src/+/HEAD/docs/design/sandbox.md#Sandbox-Windows-architecture)
 
+### Linux
+
+We could use something like flatpak here, though its unlikely, the current most likely solution is to use linux namespaces to work like a docker-like system.
+
+This is mainly solved other then implementation details
+
 ### MacOS
 
-*From [RayAar/minecraft-macos-sandboxing, this repo has now moved to this document](https://github.com/RayBytes/minecraft-macos-sandboxing)*
-
-*Documentation in progress*
+*Implementation by Game_Time from [minecraft-macos-sandboxing, this repo has now been moved to this document](https://github.com/RayBytes/minecraft-macos-sandboxing)*
 
 The idea for MacOS sandboxing is to completely sandbox Minecraft. This will disable minecraft from accessing any harmful data which it could gain access to. We used apple's sandbox-exec and created a profile for it. The profile will only give access to files which minecraft needs to run.
 
@@ -29,12 +33,24 @@ Run the command:
 
 #### Sandbox Profile
 
-See [macos-sandboxing.sb](./macos-sandbox.sb)
+See [macos-sandboxing.sb](./macos/macos-sandbox.sb)
 
+#### Notice
 
-### Linux
+If you would like to: 
+- Give minecraft access to more files/directories
+- Play minecraft pre-1.7
 
-We could use something like flatpak here, though its unlikely, the current most likely solution is to use linux namespaces to work like a docker-like system.
+You would need to use the python file [patcher.py](./macos/patcher.py)
 
-This is mainly solved other then implementation details
+###### Usage 
 
+For giving yourself access to pre-1.7 versions of minecraft:
+`python patcher.py version-patch-path=/path/to/sandbox/file/minecraft-sandbox.sb`
+
+For giving yourself access to pre-1.7 versions of minecraft:
+`python patcher.py permission-patch=/path/to/sandbox/file/minecraft-sandbox.sb type=file-read*`
+
+*The `type` parameter can be anything from the below list*
+- file-read*
+- file-write*
