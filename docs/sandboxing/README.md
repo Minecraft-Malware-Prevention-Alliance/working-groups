@@ -14,7 +14,7 @@ There is no clear solution to this yet, but it should take heavy inspiration fro
 
 *Documentation in progress*
 
-The idea for MacOS sandboxing is to completely sandbox Minecraft. This will disable minecraft from accessing any harmful data which it could gain access to. We used apple's sandbox-exec and created a profile for it. The profile will* only give access to files which minecraft needs to run.
+The idea for MacOS sandboxing is to completely sandbox Minecraft. This will disable minecraft from accessing any harmful data which it could gain access to. We used apple's sandbox-exec and created a profile for it. The profile will only give access to files which minecraft needs to run.
 
 #### How does it work?
 
@@ -25,7 +25,7 @@ It uses MacOS's inbuilt `sandbox-exec` command to work, as sandbox-exec is a ful
 Run the command:
 `sandbox-exec -f Path/To/The/Sandbox/Profile/minecraft-sandbox.sb /Applications/Minecraft.app/Contents/MacOS/launcher`
 
-*Note: This project is still in development and may not function as it should, some extra files may still be given access to Minecraft which will be removed in future versions. Be vary of this before using this project.*
+*Note: This project is now in beta testing, and may be used on clients properly. Report any bugs in the [discord](https://discord.gg/zPdFK47682)*
 
 #### Sandbox Profile
 
