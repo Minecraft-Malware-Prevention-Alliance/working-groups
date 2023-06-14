@@ -27,8 +27,9 @@
   (regex #"^/Users/[^.]+/Library/Application Support/minecraft/launcher/launcher.bundle/Contents/Frameworks/launcher-Helper.app")
 )
 
-; no idea 
+; no idea what hosts is, access to java for possible custom jdk 
 (allow file-read-data
+  (subpath "/Library/Java/JavaVirtualMachines/")
   (subpath "/private/etc/hosts")
 )
 
