@@ -1,3 +1,5 @@
+
+
 (version 1)
 (deny default)
 (allow process-exec)
@@ -13,16 +15,14 @@
 
 ; Allow read and write access to Minecraft application files
 (allow file-read* file-write*
-  (regex "/Library/Application Support/minecraft/*")
-  
+  (regex #"^/Users/[^.]+/Library/Application Support/minecraft/*")
   (subpath "/Applications/Minecraft.app/")
   (subpath "/Applications/Minecraft.app/Contents/MacOS/launcher")
   (regex "/Library/Saved Application State/com.mojang.minecraftlauncher.savedState/*")
   (subpath "/Library/Saved Application State/com.mojang.minecraftlauncher.savedState")
-  
-  
-  ; Changes for Prism Launcher
-  (regex "$HOME/Library/Application Support/PrismLauncher/*")
+
+; Changes for Prism Launcher
+  (regex #"^/Users/[^.]+/Library/Application Support/PrismLauncher/*")
   (subpath "/Applications/Prism Launcher.app/")
   (subpath "/Applications/Prism Launcher.app/Contents/MacOS/launcher")
 )
@@ -31,7 +31,7 @@
 ; Some other random minecraft stuff
 (allow file-issue-extension 
   (extension-class "com.apple.app-sandbox.read") 
-  (literal "$HOME/Library/Application Support/minecraft/launcher/launcher.bundle/Contents/Frameworks/launcher-Helper.app")
+  (regex #"^/Users/[^.]+/Library/Application Support/minecraft/launcher/launcher.bundle/Contents/Frameworks/launcher-Helper.app")
 )
 
 ; no idea 
@@ -39,16 +39,16 @@
   (subpath "/private/etc/hosts")
 )
 
-; Access to the computer user data
+; Access to the computer user data 
 (allow mach-lookup 
     (global-name "com.apple.biome.compute.source.user")
 )
 
 ; Allow access to user inpt data & crash reporter / security plist
 (allow file-read-data
-  (subpath "$HOME/Library/Spelling")
-  (subpath "$HOME/Library/Input Methods")
-  (subpath "$HOME/Library/Keyboard Layouts")
+  (regex #"^/Users/[^.]+/Library/Spelling")
+  (regex #"^/Users/[^.]+/Library/Input Methods")
+  (regex #"^/Users/[^.]+/Library/Keyboard Layouts")
 
   (subpath "/Library/Preferences/com.apple.security.plist")
   (subpath "/Library/Application Support/CrashReporter/DiagnosticMessagesHistory.plist")
@@ -66,14 +66,13 @@
 
 ; Allow read and write access to neccesary system files
 (allow file-read* file-write*
-  (subpath "$HOME/Library/Application Support/CEF/User Data/WidevineCdm/")
-  (subpath "$HOME/Library/Fonts/")
+  (regex #"^/Users/[^.]+/Library/Application Support/CEF/User Data/WidevineCdm/")
+  (regex #"^/Users/[^.]+/Library/Fonts/")
   (subpath "/private/var/folders/")
   (regex "^/Library/Java/JavaVirtualMachines/jdk\w*")
-  (regex "^$HOME/Library/Saved Application State/net\.java\w*")
+  (regex #"^/Users/[^.]+/Library/Saved Application State/net\.java\w*")
   (regex "/Library/Keychains/*")
   (subpath "/private/var/db/mds/")
-
 )         
 
 
@@ -86,12 +85,12 @@
   (subpath "/private/var/db/searchparty/sharedVault/agents/78BFBE72-7C54-4571-8D1B-5F58D809AA3B/savedConfiguration.plist")
   (subpath "/Library/Preferences/com.apple.networkd.plist")
   (subpath "/private/var/db/searchparty/sharedVault/BeaconPayloadCache/")
-  (subpath "$HOME/Library/Preferences/com.apple.security.plist")
+  (regex #"^/Users/[^.]+/Library/Preferences/com.apple.security.plist")
 )
 
 ; literally no idea bro
 (allow file-read-data file-write-unlink
-  (subpath "$HOME/Library/Application Support/CEF/User Data/WidevineCdm/")
+  (regex #"^/Users/[^.]+/Library/Application Support/CEF/User Data/WidevineCdm/")
 )           
 
 ; Allow access to Rosetta runtime
