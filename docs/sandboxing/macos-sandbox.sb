@@ -13,48 +13,41 @@
 
 ; Allow read and write access to Minecraft application files
 (allow file-read* file-write*
+  (regex "/Library/Application Support/minecraft/*")
   (subpath "/Applications/Minecraft.app/")
   (subpath "/Applications/Minecraft.app/Contents/MacOS/launcher")
-  (regex "/Library/Keychains/*")
-  (regex "^$HOME/Library/Saved Application State/net\.java\w*")
-  (subpath "$HOME/Library/Application Support/CEF/User Data/WidevineCdm/")
-  (subpath "$HOME/Library/Fonts/")
-  (subpath "/private/var/folders/")
+  (regex "/Library/Saved Application State/com.mojang.minecraftlauncher.savedState/*")
+  (subpath "/Library/Saved Application State/com.mojang.minecraftlauncher.savedState")
 )
 
+
+; Some other random minecraft stuff
 (allow file-issue-extension 
   (extension-class "com.apple.app-sandbox.read") 
   (literal "$HOME/Library/Application Support/minecraft/launcher/launcher.bundle/Contents/Frameworks/launcher-Helper.app")
-  )
-
-(allow file-read-data
-  (subpath "/private/etc/hosts")
-  (subpath "$HOME/Library/Application Support/minecraft")
 )
 
+; no idea 
+(allow file-read-data
+  (subpath "/private/etc/hosts")
+)
+
+; Access to the computer user data 
 (allow mach-lookup 
     (global-name "com.apple.biome.compute.source.user")
 )
 
-; Read-write access to Minecraft Game files
-(allow file-read* file-write*
-  (regex "/Library/Application Support/minecraft/*")
-)
-
-; Allow access to minecraft's sandboxed data
-(allow file-read-data
-  (subpath "/Library/Preferences/com.apple.security.plist")
-  (subpath "/Library/Saved Application State/com.mojang.minecraftlauncher.savedState")
-  (subpath "/Library/Application Support/CrashReporter/DiagnosticMessagesHistory.plist")
-)
-
-; Allow access to user inpt data
+; Allow access to user inpt data & crash reporter / security plist
 (allow file-read-data
   (subpath "$HOME/Library/Spelling")
   (subpath "$HOME/Library/Input Methods")
   (subpath "$HOME/Library/Keyboard Layouts")
+
+  (subpath "/Library/Preferences/com.apple.security.plist")
+  (subpath "/Library/Application Support/CrashReporter/DiagnosticMessagesHistory.plist")
 )
 
+; Domains which minecraft needs access to, including graphics, recogition and security
 (allow user-preference-read 
   (preference-domain "com.apple.speech.recognition.AppleSpeechRecognition.prefs")
   (preference-domain "com.apple.HIToolbox")
@@ -66,38 +59,30 @@
 
 ; Allow read and write access to neccesary system files
 (allow file-read* file-write*
-  (regex "/Library/Saved Application State/com.mojang.minecraftlauncher.savedState/*")
+  (subpath "$HOME/Library/Application Support/CEF/User Data/WidevineCdm/")
+  (subpath "$HOME/Library/Fonts/")
+  (subpath "/private/var/folders/")
+
+  (regex "^$HOME/Library/Saved Application State/net\.java\w*")
+  (regex "/Library/Keychains/*")
   (subpath "/private/var/db/mds/")
 
 )         
 
-  ; All this was used in a prior version, will be removed if no need is found
-  ; (regex "^/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/C/net\.java\w*")
-  ; (regex "^/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/C/net\.mojang\w*")
-  ; (regex "^/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/T/image\w*")
-  ; (regex "^/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/T/hsperfdata_\w*")
 
-  ; (regex "^/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/T/.com.mojang.mclauncher.helper.*")
-  ; (regex "/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/C/com.mojang.mclauncher.helper.gpu/*")
-  ; (regex "^/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/C/com.mojang.minecraftlauncher/.*")
-  ; (regex "^/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/C/com.mojang.minecraftlauncherupdater/.*")
-  ; (subpath "/private/var/folders/g2/zvwwlw_j2q338vbxcdh2d_7c0000gn/C/mds/mds.lock")
-
+; Give access to the tccd app bundle
 (allow mach-lookup (global-name "com.apple.tccd.systempolicy.appbundles"))
 
-
+; Diagnostic Message history access and security accesss
 (allow file-read-data 
   (subpath "/Library/Application Support/CrashReporter/DiagnosticMessagesHistory.plist")
-
-
-
-
   (subpath "/private/var/db/searchparty/sharedVault/agents/78BFBE72-7C54-4571-8D1B-5F58D809AA3B/savedConfiguration.plist")
   (subpath "/Library/Preferences/com.apple.networkd.plist")
   (subpath "/private/var/db/searchparty/sharedVault/BeaconPayloadCache/")
   (subpath "$HOME/Library/Preferences/com.apple.security.plist")
 )
 
+; literally no idea bro
 (allow file-read-data file-write-unlink
   (subpath "$HOME/Library/Application Support/CEF/User Data/WidevineCdm/")
 )           
@@ -120,18 +105,22 @@
   (subpath "/Library/Preferences/com.apple.ViewBridge.plist")
 )
 
+; Mojang preference domain access
 (allow user-preference-write
   (preference-domain "com.mojang.mclauncher")
   (preference-domain "com.mojang.mclauncher.helper.renderer")
   (preference-domain "com.mojang.minecraftlauncher")
 )
 
+; More mojang preference domain access 
 (allow user-preference-read
   (preference-domain "com.mojang.mclauncher.helper.renderer")
   (preference-domain "com.mojang.minecraftlauncher")
   (preference-domain "com.mojang.mclauncher")
   (preference-domain "kCFPreferencesAnyApplication")
 )
+
+; All below is the audio access
 
 (allow ipc-posix-shm-read* ipc-posix-shm-write-data
   (ipc-posix-name-regex #"^AudioIO"))
