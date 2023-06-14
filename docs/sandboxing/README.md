@@ -38,19 +38,13 @@ See [macos-sandboxing.sb](./macos/macos-sandbox.sb)
 #### Notice
 
 If you would like to: 
-- Give minecraft access to more files/directories
+- Use another launcher (while sandboxed)
 - Play minecraft pre-1.7
 
 You would need to use the python file [patcher.py](./macos/patcher.py)
 
 ###### Usage 
 
-For giving yourself access to pre-1.7 versions of minecraft:
-`python patcher.py version-patch-path=/path/to/sandbox/file/minecraft-sandbox.sb`
+For patching the profile:
+`python patcher.py --dir=/path/to/sandbox/file/minecraft-sandbox.sb --user-patch`
 
-For giving yourself access to pre-1.7 versions of minecraft:
-`python patcher.py permission-patch=/path/to/sandbox/file/minecraft-sandbox.sb type=file-read*`
-
-*The `type` parameter can be anything from the below list*
-- file-read*
-- file-write*
