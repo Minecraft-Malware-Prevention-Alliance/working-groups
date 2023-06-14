@@ -35,16 +35,7 @@ Run the command:
 
 See [macos-sandboxing.sb](./macos/macos-sandbox.sb)
 
-#### Notice
+# Notice
 
-If you would like to: 
-- Use another launcher (while sandboxed)
-- Play minecraft pre-1.7
-
-You would need to use the python file [patcher.py](./macos/patcher.py)
-
-###### Usage 
-
-For patching the profile:
-`python patcher.py --dir=/path/to/sandbox/file/minecraft-sandbox.sb --user-patch`
+For other launchers, check out the launchers directory.
 
