@@ -31,6 +31,7 @@
 (allow file-read-data
   (subpath "/Library/Java/JavaVirtualMachines/")
   (subpath "/private/etc/hosts")
+  (regex #"^/Users/[^.]+/Library/Saved Application State/net\.java\w*")
 )
 
 ; Access to the computer user data 
@@ -63,8 +64,6 @@
   (regex #"^/Users/[^.]+/Library/Application Support/CEF/User Data/WidevineCdm/")
   (regex #"^/Users/[^.]+/Library/Fonts/")
   (subpath "/private/var/folders/")
-
-  (regex "^$HOME/Library/Saved Application State/net\.java\w*")
   (regex "/Library/Keychains/*")
   (subpath "/private/var/db/mds/")
 
