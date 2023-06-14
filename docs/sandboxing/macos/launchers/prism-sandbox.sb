@@ -1,0 +1,142 @@
+
+
+(version 1)
+(deny default)
+(allow process-exec)
+(allow process-fork)
+(allow sysctl-read)
+(allow file-read-metadata)
+(allow network*)
+(allow mach*)
+(allow iokit*)
+(allow lsopen)
+(import "/System/Library/Sandbox/Profiles/bsd.sb")
+
+
+; Allow read and write access to Minecraft application files
+(allow file-read* file-write*
+  (regex #"^/Users/[^.]+/Library/Application Support/minecraft/*")
+  (subpath "/Applications/Minecraft.app/")
+  (subpath "/Applications/Minecraft.app/Contents/MacOS/launcher")
+  (regex "/Library/Saved Application State/com.mojang.minecraftlauncher.savedState/*")
+  (subpath "/Library/Saved Application State/com.mojang.minecraftlauncher.savedState")
+
+; Changes for Prism Launcher
+  (regex #"^/Users/[^.]+/Library/Application Support/PrismLauncher/*")
+  (subpath "/Applications/Prism Launcher.app/")
+  (subpath "/Applications/Prism Launcher.app/Contents/MacOS/launcher")
+)
+
+
+; Some other random minecraft stuff
+(allow file-issue-extension 
+  (extension-class "com.apple.app-sandbox.read") 
+  (regex #"^/Users/[^.]+/Library/Application Support/minecraft/launcher/launcher.bundle/Contents/Frameworks/launcher-Helper.app")
+)
+
+; no idea 
+(allow file-read-data
+  (subpath "/private/etc/hosts")
+)
+
+; Access to the computer user data 
+(allow mach-lookup 
+    (global-name "com.apple.biome.compute.source.user")
+)
+
+; Allow access to user inpt data & crash reporter / security plist
+(allow file-read-data
+  (regex #"^/Users/[^.]+/Library/Spelling")
+  (regex #"^/Users/[^.]+/Library/Input Methods")
+  (regex #"^/Users/[^.]+/Library/Keyboard Layouts")
+
+  (subpath "/Library/Preferences/com.apple.security.plist")
+  (subpath "/Library/Application Support/CrashReporter/DiagnosticMessagesHistory.plist")
+)
+
+; Domains which minecraft needs access to, including graphics, recogition and security
+(allow user-preference-read 
+  (preference-domain "com.apple.speech.recognition.AppleSpeechRecognition.prefs")
+  (preference-domain "com.apple.HIToolbox")
+  (preference-domain "com.apple.CoreGraphics")
+  (preference-domain "com.apple.universalaccess")
+  (preference-domain "com.apple.security")
+  (preference-domain "pbs")
+)
+
+; Allow read and write access to neccesary system files
+(allow file-read* file-write*
+  (regex #"^/Users/[^.]+/Library/Application Support/CEF/User Data/WidevineCdm/")
+  (regex #"^/Users/[^.]+/Library/Fonts/")
+  (subpath "/private/var/folders/")
+  (regex "^/Library/Java/JavaVirtualMachines/jdk\w*")
+  (regex #"^/Users/[^.]+/Library/Saved Application State/net\.java\w*")
+  (regex "/Library/Keychains/*")
+  (subpath "/private/var/db/mds/")
+)         
+
+
+; Give access to the tccd app bundle
+(allow mach-lookup (global-name "com.apple.tccd.systempolicy.appbundles"))
+
+; Diagnostic Message history access and security accesss
+(allow file-read-data 
+  (subpath "/Library/Application Support/CrashReporter/DiagnosticMessagesHistory.plist")
+  (subpath "/private/var/db/searchparty/sharedVault/agents/78BFBE72-7C54-4571-8D1B-5F58D809AA3B/savedConfiguration.plist")
+  (subpath "/Library/Preferences/com.apple.networkd.plist")
+  (subpath "/private/var/db/searchparty/sharedVault/BeaconPayloadCache/")
+  (regex #"^/Users/[^.]+/Library/Preferences/com.apple.security.plist")
+)
+
+; literally no idea bro
+(allow file-read-data file-write-unlink
+  (regex #"^/Users/[^.]+/Library/Application Support/CEF/User Data/WidevineCdm/")
+)           
+
+; Allow access to Rosetta runtime
+(allow file-read*
+  (subpath "/Library/Apple/usr/libexec/oah/libRosettaRuntime")
+)
+
+; Allow access to specific system frameworks and libraries
+(allow file-read*
+  (subpath "/System/Library/Frameworks/OpenGL.framework")
+  (subpath "/System/Library/Frameworks/CoreAudio.framework")
+  (subpath "/System/Library/Frameworks/CoreMedia.framework")
+  (subpath "/System/Library/PrivateFrameworks/GameKitServices.framework")
+)
+
+; Allow access to other random stuff it needs
+(allow file-read* 
+  (subpath "/Library/Preferences/com.apple.ViewBridge.plist")
+)
+
+; Mojang preference domain access
+(allow user-preference-write
+  (preference-domain "com.mojang.mclauncher")
+  (preference-domain "com.mojang.mclauncher.helper.renderer")
+  (preference-domain "com.mojang.minecraftlauncher")
+)
+
+; More mojang preference domain access 
+(allow user-preference-read
+  (preference-domain "com.mojang.mclauncher.helper.renderer")
+  (preference-domain "com.mojang.minecraftlauncher")
+  (preference-domain "com.mojang.mclauncher")
+  (preference-domain "kCFPreferencesAnyApplication")
+)
+
+; All below is the audio access
+
+(allow ipc-posix-shm-read* ipc-posix-shm-write-data
+  (ipc-posix-name-regex #"^AudioIO"))
+
+(allow mach-lookup
+  (global-name "com.apple.audio.coreaudiod")
+  (global-name "com.apple.audio.audiohald"))
+
+(allow iokit-open (iokit-user-client-class "IOAudioEngineUserClient"))
+
+(allow file-read* (subpath "/Library/Audio/Plug-Ins"))
+
+(allow device-microphone)
