@@ -30,6 +30,8 @@ This solution requires modifying Authlib, which is not released under an open so
 
 The Minecraft and the session ID process should be separated by a sandbox, but that is beyond the scope of this proposal. If the session ID process is written in Java, care must be taken in order to ensure that it cannot be attached to. This can be done with the JVM flag `+XX:DisableAttachMechanism`.
 
+Implementations of this system must not use the arguments to a process to pass the session ID, as it may expose the Session ID through OS mechanisms such as the procfs or Windows' process API
+
 ## Alternatives
 
 Using a `URLStreamHandler` was considered instead, but this presents a few issues.
