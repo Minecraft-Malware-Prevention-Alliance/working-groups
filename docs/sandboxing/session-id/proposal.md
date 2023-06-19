@@ -44,16 +44,6 @@ Using a `URLStreamHandler` was considered instead, but this presents a few issue
 
 Because this modifies Authlib, it could be seen as modifying DRM by potentially allowing you to choose a different session server and bypass certain protections.
 
-However, the authors believe that this modified Authlib would not reduce any security/DRM offered by the current Authlib.
-
-There are two scenarios to consider:
-- The server is on offline mode
-    - Changing the session server would not reduce security because the Minecraft server isn't making any calls to the session server, so logins will always succeed
-- The server is on online mode
-    - Changing the session server would not reduce security because the server would try to verify the user and see a verification failure.
-
-We would like to clarify that the session server is not the one checking for game ownership and therefore this proposal would not allow someone to run Minecraft without purchasing it.
-
 ## Implementations
 
 [NoSession](https://github.com/thefightagainstmalware/NoSession) is an implementation of a similar system. Full disclosure: One of the authors of this proposal the maintainer of this implementation.
