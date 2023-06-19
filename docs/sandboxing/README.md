@@ -29,7 +29,18 @@ As the name suggests it acts as a wrapper, so after specifying bwrap options the
 - `--proc /proc` - Mount namespaced procfs at /proc
 - `--unsetenv DBUS_SESSION_BUS_ADDRESS` - The sandbox doesn't have access to the dbus daemon anyway
 - Read-only bind mounts
-  - `/etc`
+  - `/etc/drirc`
+  - `/etc/gai.conf`
+  - `/etc/gnutls`
+  - `/etc/hostname`
+  - `/etc/hosts`
+  - `/etc/je_malloc.conf`
+  - `/etc/localtime`
+  - `/etc/machine-id` - TODO: what are consequences of omitting this
+  - `/etc/os-release` - TODO: what are consequences of omitting this
+  - `/etc/resolv.conf`
+  - `/etc/selinux`
+  - `/etc/timezone`
   - `/usr`
   - `/bin`
   - `/sbin`
@@ -55,9 +66,11 @@ As the name suggests it acts as a wrapper, so after specifying bwrap options the
 
 ##### Distro-specific configuration
 
+To solve issues with distro-specific symlinks of files, mostly in `/etc` (i.e. `resolv.conf -> /run/systemd/resolve/stub-resolv.conf`), bind mounts SHOULD use canonical file paths for the host side, while preserving the original path in the sandbox.
+
 - Read-only bind mounts
-  - `/run/systemd/resolve` - Access to systemd-resolved; **Required** if it's used as the system resolver
-  - `/nix` - Required for Nix installations
+  - `/nix/store` - Required for Nix installations
+  - `/nix/var/nix/profiles` - Required for Nix installations
   - `/run/current-system/sw` - Required for NixOS installations
 
 ##### Supporting `xdg-open`
