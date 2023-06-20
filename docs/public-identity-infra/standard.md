@@ -2,7 +2,7 @@
 
 ## 1. Introduction
 
-This document defines the infrastructure used to distribute code certificates to Minecraft mod developers and the policies surrounding this system.
+This document defines the infrastructure used to distribute code signing certificates to Minecraft mod developers and the policies surrounding this system.
 
 ### 1.1. Terminology
 
@@ -10,16 +10,16 @@ This document defines the infrastructure used to distribute code certificates to
 
 ## 2. Certificate Authorities
 
-Certificate Authorities are organisations responsible for maintaining, delivering and invalidating code certificates.
+Certificate Authorities are organisations responsible for maintaining, delivering and invalidating code signing certificates.
 
 ### 2.1. Root Authorities
 
-Root Authorities are Certificate Authorities that can be fully trusted by verifiers. They MAY deliver certificates directly and MAY sign other Certificate Authorities after verifying the new Certificate Authority is conforming to this document.
+Root Authorities are Certificate Authorities that can be fully trusted by relying parties. They MAY deliver certificates directly and MAY sign other Certificate Authorities after verifying the new Certificate Authority is conforming to this document.
 
 ### 2.2. Authority Components
 
 Certificate Authorities MUST provide the following component:
-- Online Certificate Status Protocol server ([RFC 6960](https://www.rfc-editor.org/rfc/rfc6960))
+- Web server serving a Certificate Revocation List ([RFC 5280](https://www.rfc-editor.org/rfc/rfc5280))
 
 Certificate Authorities SHOULD and Root Authorities MUST provide the following components:
 - Time-Stamp Protocol server ([RFC 3161](https://www.rfc-editor.org/rfc/rfc3161))
@@ -27,7 +27,7 @@ Certificate Authorities SHOULD and Root Authorities MUST provide the following c
 
 ### 2.3. Certificate Safety
 
-Certificate Authorities MUST NOT sign certificates directly using their primary certificate. Rather, one or multiple intermediary certificate valid for equal or less than one year MUST be used. The primary certificate MUST be stored offline and SHOULD be stored in a Hardware Security Module.
+Certificate Authorities MUST NOT sign certificates directly using their primary certificate. Rather, one or multiple intermediary certificate valid for equal or less than one year MUST be used. The primary certificate MUST be stored offline and MUST be stored in a Hardware Security Module.
 
 ## 3. Certificate Structure
 
@@ -37,15 +37,15 @@ Certificate MUST use the X.509 format as defined by [RFC 5280](https://www.rfc-e
 
 #### 3.1.1. Common Name (CN)
 
-The subject Common Name MUST be the subject real world name or a uniquely identifiable username. Under certain circumstances, the Common Name MAY be set to `Automation` if the Organization field is set.
+The subject Common Name MUST be the uniquely identifiable username used by the subject. Under certain circumstances, the Common Name MAY be set to `Automation` if the Organization field is set.
 
 #### 3.1.2. Organization (O)
 
-The subject Organization CAN be the subject organisation under which that certificate is applicable. It MAY be set to `Developer` if not applicable.
+The subject Organization CAN be the subject organisation under which that certificate is applicable. It MAY not be set.
 
 #### 3.1.3. Distinguished Name (DN)
 
-The subject Distinguished Name MUST be constructed according to [RFC 5280](https://www.rfc-editor.org/rfc/rfc5280), using the `CN` and `O` fields.
+The subject Distinguished Name MUST be constructed according to [RFC 1779](https://www.rfc-editor.org/rfc/rfc1779), using the `CN` and `O` fields, if applicable.
 
 #### 3.1.4. Other fields
 
@@ -61,56 +61,58 @@ There MUST only be a single valid certificate with the same Distinguished Name a
 
 ### 3.4. Key Algorithms
 
-Certificates must use the RSA algorithm of minimum length 2048 or the ECDSA algorithm of minimum length 256.
+Certificates MUST use the RSA algorithm of minimum length 2048 or the EdDSA algorithm with the curse ed25519 of minimum length 256.
 
 ## 4. Issuing Policies
 
 Certificate issuing MUST be done after manual review by a human. The subject is responsible for proving they are legitimate to obtain the certificate, through official documents or online presence, when applicable. The Certificate Authority is responsible for verifying the uniqueness of the certificate delivered, across all commonly trusted authorities.
 
-### 4.1. Legal documents
+### 4.1. Paid resources
 
-A subject requesting a certificate with their full name MAY submit legal documents proving who they are.
-
-### 4.2. Paid resources
-
-A subject requesting a certificate with their username MAY submit various paid resources proving who they are. 
+A subject requesting a certificate with their username MAY submit various paid resources proving who they are. A paid resource is a resource which the subject MUST have paid more than 0.50 EUR or equivalent to acquire.
 
 This includes, but not limited to:
 - Minecraft accounts
 - Internet domains
 
-### 4.3. Social resources
+### 4.2. Social resources
 
 A subject requesting a certificate with their username MAY submit various social, free, resources proving who they are.
 
 This includes, but not limited to:
 - Social media accounts: Discord, Reddit, Twitter, ...
-- Email addresses
 
-### 4.4. Issuing Thresholds
+Easily mass automatable resources, such as email addresses, are excluded.
+
+### 4.3. Issuing Thresholds
 
 For a certificate to be issued, the subject MUST submit one of the following:
 
-- One or more legal documents
 - Two or more paid resources
 - One paid resources and one or more social resources
-- Three or more social resources
+- Four or more social resources
 
-If a certificate with the same Common Name already exists, the subject MUST prove ownership of one of those certificates.
+If a certificate with the same Common Name already exists, the subject MUST prove ownership of one of those certificates. 
+
+The subject MAY obtain a certificate with the Common Name `Automation` upon presentation of a certificate with the same Organization.
 
 Certificate Authorities MAY add additional requirements.
 
-### 4.5. Data retention
+### 4.4. Data retention
 
-Upon deliverance, the Certificate Authority MUST NOT keep any provided resources or documents in clear text format. The Certificate Authority MUST keep a hash of a unique identifier of the resources or documents and share that hash with other Certificate Authorities through a public database (format TBD).
+After deliverance, the Certificate Authority MUST NOT keep any provided resources or documents in clear text format. The Certificate Authority MUST keep a hash of a unique identifier of the resources or documents and share that hash with other Certificate Authorities through a public database (format TBD).
 
-### 4.6. Data privacy
+### 4.5. Data privacy
 
-The Certificate Authority MUST NOT make any information other than subject fields explicitly provided by the subject public. The Certificate Authority MUST adhere to the best privacy practices according to the European Union General Data Protection Regulations.
+The Certificate Authority MUST NOT make any information other than subject fields explicitly provided by the subject public. The Certificate Authority MUST adhere to the best privacy practices according to the European Union General Data Protection Regulations. The Certificate Authority MAY collect anonymous statistics.
 
-### 4.7. Certificate Transparency
+### 4.6. Certificate Transparency
 
 The Certificate Authority MUST publish the issued certificate to three or more Certificate Transparency logs. 
+
+### 4.7. Certificate Length
+
+The Certificate MUST NOT be valid for more than three years after deliverance.
 
 ## 5. Revocation Policies
 
