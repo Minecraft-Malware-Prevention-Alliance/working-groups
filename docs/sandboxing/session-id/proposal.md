@@ -44,6 +44,10 @@ Using a `URLStreamHandler` was considered instead, but this presents a few issue
 
 Because this modifies Authlib, it could be seen as modifying DRM by potentially allowing you to choose a different session server and bypass certain protections.
 
+#### Solution
+
+A solution to this issue is to have the client independently verify that the server has a session ID valid for Minecraft. This can be achieved with a system when on connection the Minecraft process asks the session ID process to join a 'server', and speicifying a random UUID (without dashes) as the server name. Then the client can independently verify that the server actually controls a valid Minecraft session ID by calling Mojang's API or by using `com.mojang.authlib.minecraft.MinecraftSessionService#hasJoinedServer` to verify that the server truly holds a valid session ID
+
 ## Implementations
 
 [NoSession](https://github.com/thefightagainstmalware/NoSession) is an implementation of a similar system. Full disclosure: One of the authors of this proposal the maintainer of this implementation.
