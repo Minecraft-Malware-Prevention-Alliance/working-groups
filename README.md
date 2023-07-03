@@ -8,10 +8,8 @@ Where we discuss specific ideas for specific working groups.
 Current working groups
 
 - [Sandboxing](docs/sandboxing/README.md)
-- [Public Identitfy Infrastructure](docs/public-identity-infra/README.md)
-- [Reproducible Builds](docs/reproducible-builds/README.md)
-- [Default Templates](docs/default-templates/README.md)
-- [Runtime Downloading](docs/runtime-downloading/README.md)
+- [TOTP](docs/totp/README.md)
+- [Mod Security](docs/mod-security/README.md)
 - [Shared Malware Scanner](docs/malware-scanner/README.md)
 
 Contributions are always welcome unless we get too much noise, then we might lock this repository.
